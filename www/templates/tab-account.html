@@ -1,0 +1,74 @@
+<ion-view view-title="會員資料">
+<style type="text/css">
+    .item .topic{
+        color : black;
+        font-weight: bold;
+    }
+
+
+    .item-note{
+        color : black;
+        
+        font-size: 17px;
+    }
+    .item .photo{
+    	margin-right: 25px;
+    }
+    .item img{
+    	max-width:300px;
+    	max-height:300px;
+    }
+</style>
+
+
+    <ion-content>
+
+        <div class="list">
+        	<a class="item">
+                <span class="item-note photo">
+                <img src="img/{{account.photo}}">
+                </span>
+            </a>
+
+            <a class="item">
+                <span class="topic">我的名字</span>
+                <span class="item-note">
+                {{account.name}}
+                </span>
+            </a>
+
+            <a class="item">
+                <span class="topic">我的生日</span>
+                <span class="item-note">
+                {{account.birth}}
+                </span>
+            </a>
+
+            <a class="item">
+                <span class="topic">我的手機</span>
+                <span class="item-note">
+                {{account.cellphone}}
+                </span>
+            </a>
+            <a class="item">
+                <span class="topic">我的伊媚兒</span>
+                <span class="item-note">
+                {{account.email}}
+                </span>
+            </a>
+            <a class="item">
+                <span class="topic">我的餘額(QAQ)</span>
+                <span class="item-note">
+                還有{{account.money}}元
+                </span>
+            </a>
+            <a class="item">
+                <span class="topic">付款方式</span>
+                <span class="item-note">
+                {{account.paymentType}}
+                </span>
+            </a>
+     
+        </div>
+    </ion-content>
+</ion-view>

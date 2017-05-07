@@ -1,0 +1,78 @@
+<ion-view view-title="付款">
+<ion-content>
+<style type="text/css">
+	.checkpay{
+		margin: 35px;
+		margin-top: 0px;
+		width:300px;
+	}
+	.item .badge{
+		height:30px;
+		padding-top: 7px;
+		top: 10px;
+		width: 50px;
+		right:10px;
+		text-align: right;
+		display: inline-block;
+		font-size: 16px;
+
+	}
+</style>
+	<!--這邊要加上未繳交費用的歷程記錄-->
+	<div class="list">
+            
+            <a class="item">
+                名稱
+                <span class="item-note">
+                {{details.name}}
+                </span>
+            </a>
+            <a class="item">
+                車位單價
+                <span class="item-note">
+                {{details.billing}}
+                </span>
+            </a>
+            <a class="item">
+                停放時間
+                <span class="item-note">
+                {{details.start}}
+                </span>
+            </a>
+            <a class="item">
+                離開時間
+                <span class="item-note">
+                {{details.leave}}
+                </span>
+            </a>
+            <a class="item">
+                停留時間
+                <span class="item-note">
+                {{details.alongTime}}
+                </span>
+            </a>
+            <a class="item">
+                費用
+                <span class="badge badge-assertive">
+                {{details.price}}
+                </span>
+            </a>
+            <a class="item">
+                支付方法
+                <span class="item-note">
+                {{details.paymentType}}
+                </span>
+            </a>
+            <a class="item">
+                停車位置
+                <span class="item-note">
+                {{details.latLng | latLng}}
+                </span>
+            </a>
+
+        </div>
+	<button class="button button-positive btn-more checkpay" ng-click="billpopup()">
+	確認付款
+	</button>
+</ion-content>
+</ion-view>

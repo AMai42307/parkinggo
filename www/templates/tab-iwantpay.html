@@ -1,0 +1,70 @@
+<ion-view view-title="停車繳費區">
+    <ion-nav-buttons side="right">
+    </ion-nav-buttons>
+    <ion-content>
+        <style type="text/css">
+        span.indent {
+            text-indent: 2em;
+        }
+        
+        .price {
+            color: red;
+        }
+        
+        .time {}
+        
+        .parking-item {
+            padding-right: 80px;
+        }
+        
+        .parking-item .detail {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -moz-box;
+            display: -moz-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            -webkit-align-items: center;
+            -moz-align-items: center;
+            align-items: center;
+            position: absolute;
+            right: 1rem;
+            top: 21px;
+        }
+        
+        .parking-item .detail .btn-more {
+            min-width: 41px;
+            min-height: 30px;
+        }
+        
+        .parking-item .detail .btn-more i.icon {
+            left: 4px;
+        }
+        
+        .parking-item .detail .price {
+            right: 57px;
+            top: 4px;
+        }
+        .parking-item .detail .status {
+            margin-right: 70px;
+            
+        }
+        </style>
+        <ion-list>
+            <ion-item class="parking-item item item-icon-left item-button-right" ng-repeat="h in parkingHistories">
+                <i class="icon ion-location"></i>
+                <h3><b>{{h.name}}</b></h3>
+                <p><span class="time">{{h.start}}</span> </p>
+                <div class="detail">
+                    <span class="status">{{h.status}}</span>
+                    <span class="badge badge-assertive price">{{h.price}}</span>
+                    <button class="button button-positive btn-more" ng-click="goDetail({{h.hid}})">
+                        繳費
+                    </button>
+                </div>
+            </ion-item>
+        </ion-list>
+    </ion-content>
+</ion-view>

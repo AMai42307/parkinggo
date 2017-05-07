@@ -1,0 +1,125 @@
+<ion-view view-title="ParkingGO">
+  <ion-nav-buttons side="right">
+      <a class="button button-icon icon ion-search " ng-click="options.isShowSearchBox=!options.isShowSearchBox"></a>
+  </ion-nav-buttons>
+  
+  <ion-content>
+  <style type="text/css">
+    .popup-buttons{
+      display:block!important;
+    }
+  	.scroll{
+  		height:100%;
+  	}
+  	#myMap{
+  		height:100%;
+  		width:100%;
+  	}
+  	.controlUI{
+  margin-bottom: 7px;  
+}
+.controlUI_Btn{
+  color:#464646;
+  background-color: #fff;
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  cursor: pointer;
+  margin-right: 10px;
+  padding: 0;
+}
+
+.controlUI_Icon{
+  margin: 8px;
+  width: 36px;
+  height: 36px;
+  background-size: 36px 36px;
+  background-position: 0 0;
+  background-repeat: no-repeat;
+}
+.controlUI_Icon::before{
+  font-size: 36px;
+  margin-right: 4px;
+}
+.controlUI_Btn:active{
+  background-color:yellow;
+}
+
+.carMarkerUI{
+  margin:5px;
+}
+.carMarkerUI_Btn{
+  margin:3px;
+  color:#464646;
+  background-color: #fff;
+  border: none;
+  width: 80px;
+  height:30px;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  cursor: pointer;
+  padding: 0;
+  font-size: 20px;
+}
+.car-save{
+  
+}
+.car-cancel{
+
+}
+
+.gmnoprint{
+  display: none;
+}
+.controls {
+        margin-top: 10px;
+        border: 1px solid transparent;
+        border-radius: 2px 0 0 2px;
+        box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        height: 32px;
+        outline: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      }
+
+      #pac-input {
+        background-color: #fff;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        margin-left: 12px;
+        padding: 0 11px 0 13px;
+        text-overflow: ellipsis;
+        width: 93%;
+      }
+
+      #pac-input:focus {
+        border-color: #4d90fe;
+      }
+
+      .pac-container {
+        font-family: Roboto;
+      }
+
+      #type-selector {
+        color: #fff;
+        background-color: #4d90fe;
+        padding: 5px 11px 0px 11px;
+      }
+
+      #type-selector label {
+        font-family: Roboto;
+        font-size: 13px;
+        font-weight: 300;
+      }
+      #target {
+        width: 345px;
+      }
+  </style>
+    <div id="myMap"></div>
+    <input id="pac-input" class="controls" type="text" placeholder="搜尋想去的地點" ng-show="options.isShowSearchBox">
+    
+  </ion-content>
+</ion-view>

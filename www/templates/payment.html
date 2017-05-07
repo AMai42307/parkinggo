@@ -1,0 +1,33 @@
+<ion-view view-title="付款方式設定">
+<style type="text/css">
+	.paybt{
+		display: inline-block;
+		width: 150px;
+		height: 150px;
+		text-align:center;
+		margin-top: 23px;
+		margin-left: 23px;
+		line-height: 20px;
+	}
+	.payicon{
+		margin-top: 16px;
+		max-height:90px;
+		max-width:90px;
+	}
+	
+</style>
+	<ion-content>
+		<a class="button button-outline button-positive paybt" ng-click="paymentpopup(1)">
+		<img src="img/203287.jpg" class="payicon"><br>統一超商<br>(7-ELEVEN)</a>
+		<a class="button button-outline button-positive paybt" ng-click="paymentpopup(2)">
+		<img src="img/family.jpg" class="payicon"><br>全家便利商店<br>(FamilyMart)</a>
+		<a class="button button-outline button-positive paybt" ng-click="paymentpopup(3)">
+		<img src="img/wearefamily.png" class="payicon"><br>中國信託</a>
+		<a class="button button-outline button-positive paybt" ng-click="paymentpopup(4)">
+		<img src="img/esunbank.jpg" class="payicon"><br>玉山銀行</a>
+		<a class="button button-outline button-positive paybt" ng-click="paymentpopup(5)">
+		<img src="img/allpay.png" class="payicon"><br>歐富寶</a>
+		<a class="button button-outline button-positive paybt" ng-click="paymentpopup(6)">
+		<img src="img/alipay.png" class="payicon"><br>支付寶</a>
+	</ion-content>
+</ion-view>

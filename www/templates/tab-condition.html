@@ -1,0 +1,60 @@
+<ion-view view-title="目前狀態">
+<style type="text/css">
+    .item{
+        color : black;
+    }
+
+
+    .item-note{
+        color : black;
+        font-weight: bold;
+        font-size: 17px;
+    }
+</style>
+
+
+    <ion-content>
+
+        <div class="list">
+            <a class="item">
+                車子位置：
+                <span class="item-note">
+                {{condition.name}}
+                </span>
+            </a>
+
+            <a class="item">
+                停放時間：
+                <span class="item-note">
+                {{condition.start}}
+                </span>
+            </a>
+
+            <a class="item">
+                停留時間：
+                <span class="item-note">
+                {{condition.alongTime}}
+                </span>
+            </a>
+            <a class="item">
+                車位單價：
+                <span class="item-note">
+                {{condition.billing}}
+                </span>
+            </a>
+            <a class="item">
+                目前應付金額：
+                <span class="item-note">
+                {{condition.price}}
+                </span>
+            </a>
+            <a class="item">
+                繳費狀態：
+                <span class="item-note">
+                {{condition.status}}
+                </span>
+            </a>
+     
+        </div>
+    </ion-content>
+</ion-view>

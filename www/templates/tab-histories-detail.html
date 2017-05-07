@@ -1,0 +1,86 @@
+<ion-view view-title="詳細記錄">
+    <ion-content>
+    <style type="text/css">
+        a.item{
+            color: #777;
+        }
+        .item-note{
+            color: #353535;
+            font-weight: bold;
+        }
+        .checkpay{
+            width:100px;
+        }
+    </style>
+        <div class="list">
+            
+            <a class="item">
+                No.
+                <span class="item-note">
+                {{details.hid}}
+                </span>
+            </a>
+            <a class="item">
+                名稱
+                <span class="item-note">
+                {{details.name}}
+                </span>
+            </a>
+            <a class="item">
+                車位單價
+                <span class="item-note">
+                {{details.billing}}
+                </span>
+            </a>
+            <a class="item">
+                停放時間
+                <span class="item-note">
+                {{details.start}}
+                </span>
+            </a>
+            <a class="item">
+                離開時間
+                <span class="item-note">
+                {{details.leave}}
+                </span>
+            </a>
+            <a class="item">
+                停留時間
+                <span class="item-note">
+                {{details.alongTime}}
+                </span>
+            </a>
+            <a class="item">
+                費用
+                <span class="badge badge-assertive">
+                {{details.price}}
+                </span>
+            </a>
+            <a class="item">
+                支付方法
+                <span class="item-note">
+                {{details.paymentType}}
+                </span>
+            </a>
+            <a class="item">
+                停車位置
+                <span class="item-note">
+                {{details.latLng | latLng}}
+                </span>
+            </a>
+            <a class="item">
+                繳費狀態
+                <span class="item-note">
+                {{details.status}}
+                </span>
+            </a>
+            <a class="item" id='paybt'>
+                是否現在繳費?
+                <span class="item-note ">
+                <button class="button button-positive btn-more checkpay" ng-click="billpopup()">繳費</button>
+                </span>
+            </a>
+
+        </div>
+    </ion-content>
+</ion-view>
