@@ -22,16 +22,6 @@ angular.module('starter.services', [])
     'email':'ccuandylau8787@bachimail.com.tw',
     'money':9487,
     'paymentType':'支付寶'
-  },{
-    'acid':2,
-    'photo':'adam.jpg',
-    'userid':'misgold55555',
-    'name':'資管金乘五',
-    'birth':'1995/05/05',
-    'cellphone':'0985555555',
-    'email':'misgold55555@bachimail.com.tw',
-    'money':9487,
-    'paymentType':'支付寶'
   }
   ];
   var changeAccountpayment=function(userid,payid){

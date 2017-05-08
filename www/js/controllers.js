@@ -1,6 +1,6 @@
 angular.module('starter.controllers', ['ionic'])
 
-.controller('mapCtrl', function(debugMocks, $scope, parkingHistory, $ionicPopup, $firebaseAuth, $timeout, geo, $compile) {
+.controller('mapCtrl', function(debugMocks, $scope, parkingHistory, $ionicPopup, $firebaseAuth, $timeout, geo, $compile,accountdata) {
 
   $scope.fbLogin = function() {
 
@@ -16,10 +16,7 @@ angular.module('starter.controllers', ['ionic'])
                   console.log("firebaseui!!!! SUCCESSED!!");
                   console.log(currentUser);
                   $scope.fbPhoto = currentUser.photoURL;
-                  var img = document.createElement('img');
-                  img.src = currentUser.photoURL;
-                  var element = document.getElementById("firebaseui-auth-container");
-element.appendChild(img);
+                  
                   
                   return false;
               }
