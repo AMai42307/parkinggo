@@ -56,7 +56,7 @@
             <ion-item class="parking-item item item-icon-left item-button-right" ng-repeat="h in parkingHistories">
                 <i class="icon ion-location"></i>
                 <h3><b>{{h.name}}</b></h3>
-                <p><span class="time">{{h.start}}</span> </p>
+                <p><span class="time">{{h.start | date:'yyyy-MM-dd HH:mm'}}</span> </p>
                 <div class="detail">
                     <span class="status">{{h.status}}</span>
                     <span class="badge badge-assertive price">{{h.price}}</span>

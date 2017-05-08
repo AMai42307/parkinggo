@@ -1,0 +1,9 @@
+<ul class="list">
+	<li class="item" ng-repeat="i in parkingHistoryList track by $index">
+		<a>
+			<h2>{{i.name}}</h2>
+			<p>{{i.start | date:'yyyy-MM-dd HH:mm:ss'}}</p>
+			<!--<p>{{i.latLng | latLng}}</p>-->
+		</a>
+	</li>
+</ul>

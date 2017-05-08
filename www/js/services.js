@@ -145,14 +145,26 @@ angular.module('starter.services', [])
         if(value.hid == hid){
           rn = value;
         }else if(key == list.length){
-        
         }else{
-      
         }
-        return 'gg';
       });
       return rn;
     }
+  var addCarParkingList = function(latLng,name,billing,price){
+    let temp = {
+        'hid' : list.length,
+        'name' : name,
+        'billing' : billing,
+        'start' : Math.round(new Date().getTime()),
+        'leave' : '',
+        'alongTime' : '',
+        'status' : '未繳費',
+        'price' : price,
+        'paymentType' : '',
+        'latLng':latLng
+      }
+      list.push(temp);
+  }
   var getParkingHistories = function(hid){
       var rn = false;
       angular.forEach(list, function(value, key) {
@@ -171,11 +183,12 @@ angular.module('starter.services', [])
     list:list,
     current:current,
     getParkingHistories:getParkingHistories,
-    changeParkingStatus:changeParkingStatus
+    changeParkingStatus:changeParkingStatus,
+    addCarParkingList:addCarParkingList
   }
 })
 
-.factory('geo',function($cordovaGeolocation){
+.factory('geo',function($q, $cordovaGeolocation){
   var coords={
     lat:null,
     lng:null
@@ -185,74 +198,30 @@ angular.module('starter.services', [])
       return coords;
     },
     refresh:function(){
-      var pos = $cordovaGeolocation.getCurrentPosition(
-      {
-        timeout:1000,
-        enableHighAccuracy:true
-      }).then(function(value){
-        //console.log('==>refresh<==');
-        //console.log(value);
-        coords.lat=value.coords.latitude;
-        coords.lng=value.coords.longitude;
-        return coords;
-      },function(err){
-        console.warn('?');
-        return false;
-      });
-      //console.log(pos);
+      var deferred = $q.defer();
+      $cordovaGeolocation.getCurrentPosition({
+          timeout: 1000,
+          enableHighAccuracy: true
+        }).then(function(value){
+          //console.log('===refresh===');
+          //console.log(value);
+          coords.lat = value.coords.latitude;
+          coords.lng = value.coords.longitude;
+          //console.log(value);
+          deferred.resolve(coords);
+        },function(err){
+          console.warn('$cordovaGeolocation getCurrentPosition ERROR');
+          deferred.reject(err);
+        });
+      return deferred.promise;
+    },
+    centerMap:function(map){
+
     }
   }
 })
 
 
-.factory('Chats', function() {
-  // Might use a resource here that returns a JSON array
-
-  // Some fake testing data
-  var chats = [{
-    id: 0,
-    name: 'Ben Sparrow',
-    lastText: 'You on your way?',
-    face: 'img/ben.png'
-  }, {
-    id: 1,
-    name: 'Max Lynx',
-    lastText: 'Hey, it\'s me',
-    face: 'img/max.png'
-  }, {
-    id: 2,
-    name: 'Adam Bradleyson',
-    lastText: 'I should buy a boat',
-    face: 'img/adam.jpg'
-  }, {
-    id: 3,
-    name: 'Perry Governor',
-    lastText: 'Look at my mukluks!',
-    face: 'img/perry.png'
-  }, {
-    id: 4,
-    name: 'Mike Harrington',
-    lastText: 'This is wicked good ice cream.',
-    face: 'img/mike.png'
-  }];
-
-  return {
-    all: function() {
-      return chats;
-    },
-    remove: function(chat) {
-      chats.splice(chats.indexOf(chat), 1);
-    },
-    get: function(chatId) {
-      for (var i = 0; i < chats.length; i++) {
-        if (chats[i].id === parseInt(chatId)) {
-          return chats[i];
-        }
-      }
-      return null;
-    }
-  };
-})
 .factory('bl',function($ionicPlatform,$cordovaBluetoothSerial,debugMocks){
   var status = {
     enableBl: false,
