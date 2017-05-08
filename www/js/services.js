@@ -194,6 +194,7 @@ angular.module('starter.services', [])
         //console.log(value);
         coords.lat=value.coords.latitude;
         coords.lng=value.coords.longitude;
+        console.log(coords);
         return coords;
       },function(err){
         console.warn('?');

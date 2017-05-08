@@ -6,7 +6,7 @@
     }
 
 
-    .item-note{
+    .item-note.acdata{
         color : black;
         
         font-size: 17px;
@@ -26,45 +26,45 @@
         <div class="list">
         	<a class="item">
                 <span class="item-note photo">
-                <img src="img/{{account.photo}}">
+                <img ng-src="img/{{account.photo}}">
                 </span>
             </a>
 
             <a class="item">
                 <span class="topic">我的名字</span>
-                <span class="item-note">
+                <span class="item-note acdata">
                 {{account.name}}
                 </span>
             </a>
 
             <a class="item">
                 <span class="topic">我的生日</span>
-                <span class="item-note">
+                <span class="item-note acdata">
                 {{account.birth}}
                 </span>
             </a>
 
             <a class="item">
                 <span class="topic">我的手機</span>
-                <span class="item-note">
+                <span class="item-note acdata">
                 {{account.cellphone}}
                 </span>
             </a>
             <a class="item">
                 <span class="topic">我的伊媚兒</span>
-                <span class="item-note">
+                <span class="item-note acdata">
                 {{account.email}}
                 </span>
             </a>
             <a class="item">
                 <span class="topic">我的餘額(QAQ)</span>
-                <span class="item-note">
+                <span class="item-note acdata">
                 還有{{account.money}}元
                 </span>
             </a>
             <a class="item">
                 <span class="topic">付款方式</span>
-                <span class="item-note">
+                <span class="item-note acdata">
                 {{account.paymentType}}
                 </span>
             </a>

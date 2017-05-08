@@ -437,7 +437,8 @@ angular.module('starter.controllers', ['ionic'])
 
                     case 'location':
                         setMyLocation(map);
-                        //console.log(geo.getPosition());
+                        console.log(info.myLocationObj);
+                        console.log(geo.getPosition());
                         break;
 
                     case 'options':
@@ -621,6 +622,13 @@ angular.module('starter.controllers', ['ionic'])
 .controller('MenuCtrl', function($scope,accountdata) {
     var userid='ccuandylau8787';
     $scope.account = accountdata.getAccountdata(userid);
+})
+
+.controller('LoginCtrl', function($scope,$state,$ionicBackdrop) {
+    $scope.gopage = function() {
+            $state.go('app.map');
+        }
+    
 })
 
 .controller('AccountCtrl', function($scope,accountdata) {
