@@ -12,11 +12,12 @@
         font-size: 17px;
     }
     .item .photo{
-    	margin-right: 25px;
+    	margin: 0 auto;
+    	float: none;
+    	display: flex;x
     }
     .item img{
-    	max-width:300px;
-    	max-height:300px;
+    	
     }
 </style>
 
@@ -25,9 +26,9 @@
 
         <div class="list">
         	<a class="item">
-                <span class="item-note photo">
-                <img ng-src="img/{{account.photo}}">
-                </span>
+                
+                <img class="photo" ng-src="{{account.photo}}">
+                
             </a>
 
             <a class="item">

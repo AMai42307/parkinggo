@@ -1,0 +1,52 @@
+<ion-view view-title="登入" class="loginview">
+<ion-content class="login">
+
+<style type="text/css">
+	.bar-header{
+		/*display:none;*/
+	}
+	.loginview{
+		background: url("img/bg.jpeg") no-repeat ;
+		background-size:cover;
+		background-position: center center;
+	}
+	.button.loginbt{
+		
+		margin: 15px auto;
+		font-weight: bold;
+		font-size: 18px;
+		max-width: 300px;
+
+	}
+	#logindiv{
+		
+		padding-top: 125%;
+		position: fixed;
+		left: 0;
+		right: 0;
+    	bottom: 0;
+    	-webkit-transition: all 1s ease-out; /* For Safari 3.1 to 6.0 */
+    	transition: all 1s ease-out;
+	
+	}
+	.scroll{
+		height: 100%;
+	}
+	#firebaseui-auth-container{
+
+    	
+    	
+    	
+  }
+</style>
+<div id="logindiv">
+	<a class="button button-block button-positive loginbt" ng-click="gopage()">
+	Login Here
+	</a>
+	<a class="button button-block button-positive loginbt" ng-click="fbLogin()">
+  	Facebook Login
+	</a>
+	<div id="firebaseui-auth-container"></div>
+</div>
+</ion-content>
+</ion-view>

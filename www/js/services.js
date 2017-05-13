@@ -10,20 +10,48 @@ angular.module('starter.services', [])
     return roundTo(latLng.lat,4) + "," + roundTo(latLng.lng,4);
   }
 })
+//firebase相關設定
+.factory('firebaseconfig',function(){
+  var config = {
+          apiKey: "AIzaSyCnBdkBnkadSDP7u9usBsdyEz91jhu7tEQ",
+          authDomain: "maptest-2b2c0.firebaseapp.com",
+          databaseURL: "https://maptest-2b2c0.firebaseio.com",
+          storageBucket: "maptest-2b2c0.appspot.com",
+          messagingSenderId: "280621093906"
+      };
+  return{
+    config:config
+  }
+})
+
 //會員資料
 .factory('accountdata',function(){
+  var islogin=false;
   var acdata=[{
     'acid':1,
-    'photo':'ben.png',
+    'photo':'img/ben.png',
     'userid':'ccuandylau8787',
     'name':'中正劉Der滑',
     'birth':'1987/08/07',
     'cellphone':'0987878787',
     'email':'ccuandylau8787@bachimail.com.tw',
     'money':9487,
-    'paymentType':'支付寶'
+    'paymentType':'支付寶',
+    'islogin':false
   }
   ];
+  var checkLogin=function(){
+    acdata[0].islogin=true;
+  }
+  var fbloginChange=function(userid,name,photo,email){
+    angular.forEach(acdata,function(value,key){
+      if(value.userid==userid){
+        value.name=name;
+        value.photo=photo;
+        value.email=email;
+        }
+      })
+  }
   var changeAccountpayment=function(userid,payid){
     
     angular.forEach(acdata,function(value,key){
@@ -69,11 +97,14 @@ angular.module('starter.services', [])
   return{
     acdata:acdata,
     getAccountdata:getAccountdata,
-    changeAccountpayment:changeAccountpayment
+    changeAccountpayment:changeAccountpayment,
+    fbloginChange:fbloginChange,
+    checkLogin:checkLogin
   }
 })
 
 .factory('parkingHistory',function(){
+  var nonepaylist=[];
   var list = [
       {
         'hid' : 1,
@@ -89,6 +120,17 @@ angular.module('starter.services', [])
       },
       {
         'hid' : 2,
+        'name' : '中正大學管院停車場',
+        'billing' : '$10/hr',
+        'start' : '2017/05/17  07:21',
+        'leave' : '2017/05/17  11:24',
+        'alongTime' : '4hr',
+        'status' : '未繳費',
+        'price' : '$40',
+        'paymentType' : '悠遊卡',
+        'latLng':{lat:23.560093,lng:120.474851}
+      },{
+        'hid' : 3,
         'name' : '中正大學管院停車場',
         'billing' : '$10/hr',
         'start' : '2017/05/17  07:21',
@@ -118,7 +160,7 @@ angular.module('starter.services', [])
         if(value.hid == hid){
           if(value.status=='未繳費'){
             value.status='已繳費';
-            console.log(value.status);
+            //console.log(value.status);
           }
         }else if(key == list.length){
         
@@ -129,16 +171,27 @@ angular.module('starter.services', [])
       });
         
   }
-  var getNonepayHistories = function(hid){
-      var rn = false;
+  var clearNonepayHistories = function(){
+    angular.forEach(nonepaylist,function(value,key){
+      nonepaylist[key]=null;
+    });
+
+    nonepaylist = nonepaylist.filter(function(value){
+        return value!==null;
+    });
+  }
+  var setNonepayHistories = function(){
+
       angular.forEach(list, function(value, key) {
-        if(value.hid == hid){
-          rn = value;
+        if(value.status =='未繳費'){
+          nonepaylist.push(value);
+          //console.log(nonepaylist);
+
         }else if(key == list.length){
         }else{
         }
       });
-      return rn;
+      return 1;
     }
   var addCarParkingList = function(latLng,name,billing,price){
     let temp = {
@@ -171,10 +224,13 @@ angular.module('starter.services', [])
     }
   return {
     list:list,
+    nonepaylist:nonepaylist,
     current:current,
     getParkingHistories:getParkingHistories,
     changeParkingStatus:changeParkingStatus,
-    addCarParkingList:addCarParkingList
+    addCarParkingList:addCarParkingList,
+    setNonepayHistories:setNonepayHistories,
+    clearNonepayHistories:clearNonepayHistories
   }
 })
 
@@ -203,6 +259,7 @@ angular.module('starter.services', [])
           console.warn('$cordovaGeolocation getCurrentPosition ERROR');
           deferred.reject(err);
         });
+        //console.log(deferred.promise);
       return deferred.promise;
     },
     centerMap:function(map){

@@ -6,9 +6,13 @@
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','ngCordova','firebase'])
+.run(function($ionicModal,$ionicPlatform) {
 
-.run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
+    
+
+
+
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
@@ -157,6 +161,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
                 'menuContent': {
                     templateUrl: 'templates/tab-histories-detail.html',
                     controller: 'detailCtrl'
+                }
+            }
+        })
+        .state('app.login', {
+            url: '/login',
+            views: {
+                'menuContent': {
+                    templateUrl: 'templates/loginmodal.html',
+                    controller: 'LoginmodalCtrl'
                 }
             }
         });

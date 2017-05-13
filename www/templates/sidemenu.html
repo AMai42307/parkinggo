@@ -17,14 +17,26 @@
     .avat.has-header{
       top:72px;
     }
+    .item-avatar .phimg{
+      top:6px !important;
+      left: 10px !important;
+      max-width: 60px !important;
+      max-height: 60px !important;
+
+    }
+    .title.acname{
+      text-align: left;
+      font-weight: bold;
+
+    }
 
 
     </style>
 
   <ion-side-menu side="left">
     <ion-header-bar class="bar-stable item-avatar" >
-      <img ng-src="img/{{account.photo}}">
-      <h1 class="title">Hi , {{account.name}}</h1>
+      <img ng-src="{{account.photo}}" class="phimg">
+      <h1 class="title acname"> Hi , {{account.name}}</h1>
 
     </ion-header-bar>
     <ion-content class="avat">
@@ -34,9 +46,6 @@
         </ion-item>
         <ion-item menu-close href="#/app/condition">
           目前停車狀態
-        </ion-item>
-        <ion-item menu-close href="#/app/iwantpay">
-          我要繳費
         </ion-item>
         <ion-item menu-close href="#/app/histories">
           歷史記錄
@@ -49,6 +58,9 @@
         </ion-item>
         <ion-item menu-close href="#/app/map">
           回到停車地圖
+        </ion-item>
+        <ion-item menu-close href="#/">
+          登出
         </ion-item>
       </ion-list>
     </ion-content>
