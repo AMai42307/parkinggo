@@ -10,6 +10,22 @@ angular.module('starter.services', [])
     return roundTo(latLng.lat,4) + "," + roundTo(latLng.lng,4);
   }
 })
+//各個停車格資料儲存
+.factory('firebaseparkinglist',function(){
+  var parkinglist=[];
+  var setList=function(list){
+    angular.forEach(list,function(value,key){
+      parkinglist.push(value);
+    })
+    return 1;
+  }
+    
+  
+  return{
+      parkinglist:parkinglist,
+      setList:setList
+  }
+})
 //firebase相關設定
 .factory('firebaseconfig',function(){
   var config = {
@@ -153,6 +169,7 @@ angular.module('starter.services', [])
       parkingStart:'',
       parkingEnd:''
   }
+  
   
   var changeParkingStatus =function(hid){
       var rn = false;

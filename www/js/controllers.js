@@ -13,7 +13,7 @@ angular.module('starter.controllers', ['ionic'])
         
 })
 
-.controller('mapCtrl', function(debugMocks, $scope, parkingHistory, $ionicPopup, $firebaseAuth, $timeout, geo, $compile,accountdata,$ionicModal,firebaseconfig) {
+.controller('mapCtrl', function(debugMocks, $scope, parkingHistory, $ionicPopup, $firebaseAuth, $timeout, geo, $compile,accountdata,$ionicModal,firebaseconfig,firebaseparkinglist) {
 
   $scope.isLogin=function(){
     if(accountdata.acdata[0].islogin==true){
@@ -99,9 +99,9 @@ angular.module('starter.controllers', ['ionic'])
       myLocationObj: null,
       pastcarLocationObj:null,
       carLocations: parkingHistory.list,
-
       flagLnr: {},
-      tempLatLng: {}
+      tempLatLng: {},
+      markers:{}
   }
   $scope.parkingHistoryList = info.carLocations;
   $scope.$on('$ionicView.enter',function(e){
@@ -109,6 +109,30 @@ angular.module('starter.controllers', ['ionic'])
 
   });
   
+  function addCanceldisplay(map){
+  var canceldisplayUI = document.createElement('div');
+      canceldisplayUI.className = 'canceldisplayUI';
+
+      var canceldisplayUI_Btn = document.createElement('button');
+      canceldisplayUI_Btn.id = 'canceldisplayUIBtn';
+      canceldisplayUI_Btn.className = 'canceldisplayUI_Btn';
+      canceldisplayUI_Btn.innerHTML = '取消導航路線';
+      console.log(info.directionsDisplay);
+      canceldisplayUI.appendChild(canceldisplayUI_Btn);
+      canceldisplayUI_Btn.addEventListener('click', function(){
+        info.directionsDisplay.setMap(null);
+        canceldisplayUI.hidden=true;
+      });
+
+      canceldisplayUI.index = 1;
+      map.controls[google.maps.ControlPosition.BOTTOM_CENTER].push(canceldisplayUI);
+
+      //carMarkerUI = angular.element(carMarkerUI); 
+      return {
+          "cancelBtn": canceldisplayUI_Btn,
+          "canceldisplayUI": canceldisplayUI
+      }    
+  }
 
   function main() {
       
@@ -149,17 +173,34 @@ angular.module('starter.controllers', ['ionic'])
     });
   }
 
+  function firebaseOnChanged(ref,func){
+    let devicesRef = firebase.database().ref(ref);
+    devicesRef.on('child_changed',function(snapshot) {
+        console.log(snapshot.val());
+        console.log(snapshot.key);
+        info.markers[snapshot.key].setIcon(
+          ((snapshot.val().access == true) ? icon.hasCar : icon.noCar)
+          );
+        
+    });
+  }
+
   function initAuth(map) {
       $firebaseAuth().$signInAnonymously().then(function(user) {
           console.log("Connected!");
 
-          firebaseQuery('test/devicesInfo/b/',function(data){
-            let parkingListArray = [];
-            for(let i in data){
-              parkingListArray.push(data[i]);
-            }
-            addMarkers(map, parkingListArray);
+          firebaseQuery('test/devicesInfo/',function(data){
+            
+            addMarkers(map, data.a);
+            addMarkers(map, data.b);
+            //console.log(parkingListArray);
+            //存進service
+            //firebaseparkinglist.setList(parkingListArray);
+            //console.log(firebaseparkinglist.parkinglist);
+            console.log(info);
           });
+          firebaseOnChanged('test/devicesInfo/a/');
+          firebaseOnChanged('test/devicesInfo/b/');
           // mapCenter
           firebaseQuery('test/mapCenter/a/',function(data){
             console.log(data);
@@ -179,6 +220,7 @@ angular.module('starter.controllers', ['ionic'])
           var errorMessage = error.message;
           // ...
       });
+
   }
 
   function initMap(centerLatLng) {
@@ -187,7 +229,11 @@ angular.module('starter.controllers', ['ionic'])
       var map = new google.maps.Map(document.getElementById('myMap'), {
           center: centerLatLng,
           zoom: 18,
-          disableDefaultUI: true
+          disableDefaultUI: true,
+          styles: [{
+            featureType: "poi",
+            stylers: [{ visibility: "off" }]   
+            }]
       });
       info.directionsDisplay.setMap(map);
       //calculateAndDisplayRoute(directionsService, directionsDisplay,{"access":true,"lng":120.474841,"lat":23.560093}, {"lng":120.575548,"lat":23.560743})
@@ -335,42 +381,10 @@ angular.module('starter.controllers', ['ionic'])
 
   function addMarkers(map, parkingList) {
 
-      var markers = [];
       var infowindow = new google.maps.InfoWindow({
           content: '<button id="directBtn" type="button" ng-click="calculateAndDisplayRoute()">Click Me!</button>'
       });
-      var myPopupOptions = {
-          cssClass: 'bigPopup',
-          template: '收費時段: 00:00~24:00<br>每小時收費:20元',
-          title: '中正大學管理學院停車場',
-          subTitle: 'ccu001',
-          scope: $scope,
-          buttons: [{
-              text: '取消導航路線',
-              type: 'button-positive button-block',
-              onTap: function(e) {
-                info.directionsDisplay.setMap(null);
-                  //info.flagLnr.click();
-              }
-
-          }, {
-              text: '導航至此',
-              type: 'button-positive button-block',
-              onTap: function(e) {
-                  if (1) {
-                      //don't allow the user to close unless he enters wifi password
-                      info.directionsDisplay.setMap(map);
-                     $scope.calculateAndDisplayRoute();
-                      //e.preventDefault();
-                  } else {
-                      return 1;
-                  }
-              }
-          }, {
-              text: 'Cancel',
-              type: 'button-block'
-          }]
-      };
+      
       /*
           myPopup.then(function(res) {
             console.log('Tapped!', res);
@@ -381,25 +395,51 @@ angular.module('starter.controllers', ['ionic'])
           }, 3000);
          };*/
 
+         var markerArray=[];
+      for (var key in parkingList) {
 
-      for (var i = 0; i < parkingList.length; i++) {
 
           //console.log(i + ' : ');
           //console.log(parkingList[i]);
           var m = new google.maps.Marker({
-              position: parkingList[i],
+              position: parkingList[key],
               map: map,
-              icon: ((parkingList[i].access == true) ? icon.hasCar : icon.noCar)
+              icon: ((parkingList[key].access == true) ? icon.hasCar : icon.noCar)
           });
-          markers.push(m);
+          info.markers[key]=m;
+          markerArray.push(m);
 
 
           //infowindow.setPosition(parkingList[i]);
 
-          m.addListener('click', (function(m, infowindow, i) {
+          m.addListener('click', (function(m, infowindow, key) {
               return function() {
                   info.tempLatLng = m.getPosition();
-                  $ionicPopup.show(myPopupOptions);
+                  $ionicPopup.show({
+          cssClass: 'bigPopup',
+          template: '收費時段: '+parkingList[key].freetime+'</br>每小時收費:'+parkingList[key].price+'元',
+          title: parkingList[key].title,
+          subTitle: parkingList[key].subtitle,
+          scope: $scope,
+          buttons: [ {
+              text: '導航至此',
+              type: 'button-positive button-block',
+              onTap: function(e) {
+                  if (1) {
+                      //don't allow the user to close unless he enters wifi password
+                      info.directionsDisplay.setMap(map);
+                     $scope.calculateAndDisplayRoute();
+                     addCanceldisplay(map);
+                      //e.preventDefault();
+                  } else {
+                      return 1;
+                  }
+              }
+          }, {
+              text: '回到地圖',
+              type: 'button-block button-positive'
+          }]
+      });
                   
                   //infowindow.setPosition(m.getPosition());
                   info.dest.lat = m.getPosition().lat();
@@ -412,14 +452,15 @@ angular.module('starter.controllers', ['ionic'])
                   //m.setMap(null);
 
               }
-          })(m, infowindow, i));
+          })(m, infowindow, key));
 
       }
 
-      var markerCluster = new MarkerClusterer(map, markers, {
+      var markerCluster = new MarkerClusterer(map, markerArray, {
           maxZoom: 18,
           imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
       });
+      return markerArray;
   }
   $scope.calculateAndDisplayRoute =
       function() {
