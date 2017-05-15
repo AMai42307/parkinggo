@@ -121,39 +121,40 @@ angular.module('starter.services', [])
 
 .factory('parkingHistory',function(){
   var nonepaylist=[];
+  var isparking=false;
   var list = [
       {
-        'hid' : 1,
+        'hid' : 0,
         'name' : '大吃停車場',
-        'billing' : '$20/hr',
+        'billing' : '20',
         'start' : '2017/05/16  11:21',
         'leave' : '2017/05/16  15:20',
         'alongTime' : '4hr',
         'status' : '已繳費',
-        'price' : '$80',
+        'price' : '80',
         'paymentType' : '悠遊卡',
         'latLng':{lat:23.560095,lng:120.474851}
       },
       {
-        'hid' : 2,
+        'hid' : 1,
         'name' : '中正大學管院停車場',
-        'billing' : '$10/hr',
+        'billing' : '10',
         'start' : '2017/05/17  07:21',
         'leave' : '2017/05/17  11:24',
         'alongTime' : '4hr',
         'status' : '未繳費',
-        'price' : '$40',
+        'price' : '40',
         'paymentType' : '悠遊卡',
         'latLng':{lat:23.560093,lng:120.474851}
       },{
-        'hid' : 3,
+        'hid' : 2,
         'name' : '中正大學管院停車場',
-        'billing' : '$10/hr',
+        'billing' : '10',
         'start' : '2017/05/17  07:21',
         'leave' : '2017/05/17  11:24',
         'alongTime' : '4hr',
         'status' : '未繳費',
-        'price' : '$40',
+        'price' : '40',
         'paymentType' : '悠遊卡',
         'latLng':{lat:23.560093,lng:120.474851}
       }
@@ -210,16 +211,22 @@ angular.module('starter.services', [])
       });
       return 1;
     }
-  var addCarParkingList = function(latLng,name,billing,price){
+  var completeCarParkingList = function(){
+      list[list.length-1].leave=Math.round(new Date().getTime());
+      list[list.length-1].alongTime=Math.round((list[list.length-1].leave-list[list.length-1].start)/3600000);
+      list[list.length-1].price=list[list.length-1].billing*list[list.length-1].alongTime;
+      //繳費部分
+  }
+  var addCarParkingList = function(latLng,name,billing){
     let temp = {
         'hid' : list.length,
         'name' : name,
         'billing' : billing,
         'start' : Math.round(new Date().getTime()),
         'leave' : '',
-        'alongTime' : '',
+        'alongTime' : 1,
         'status' : '未繳費',
-        'price' : price,
+        'price' : 0,
         'paymentType' : '',
         'latLng':latLng
       }
@@ -242,12 +249,14 @@ angular.module('starter.services', [])
   return {
     list:list,
     nonepaylist:nonepaylist,
+    isparking:isparking,
     current:current,
     getParkingHistories:getParkingHistories,
     changeParkingStatus:changeParkingStatus,
     addCarParkingList:addCarParkingList,
     setNonepayHistories:setNonepayHistories,
-    clearNonepayHistories:clearNonepayHistories
+    clearNonepayHistories:clearNonepayHistories,
+    completeCarParkingList:completeCarParkingList
   }
 })
 

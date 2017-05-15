@@ -23,31 +23,32 @@
             <a class="item">
                 車位單價
                 <span class="item-note">
-                {{details.billing}}
+                ${{details.billing}}/hr
                 </span>
             </a>
             <a class="item">
                 停放時間
                 <span class="item-note">
-                {{details.start}}
+                {{details.start | date:'yyyy-MM-dd HH:mm'}}
                 </span>
             </a>
-            <a class="item">
+            <a class="item leavetimedetail" >
                 離開時間
-                <span class="item-note">
-                {{details.leave}}
+                <span class="item-note" >
+                
+                {{details.leave | date:'yyyy-MM-dd HH:mm'}}
                 </span>
             </a>
-            <a class="item">
+            <a class="item leavetimedetail" >
                 停留時間
                 <span class="item-note">
                 {{details.alongTime}}
                 </span>
             </a>
-            <a class="item">
+            <a class="item leavetimedetail" >
                 費用
                 <span class="badge badge-assertive">
-                {{details.price}}
+                ${{details.price}}
                 </span>
             </a>
             <a class="item">

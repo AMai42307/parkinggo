@@ -1,8 +1,16 @@
 angular.module('starter.controllers', ['ionic'])
 
+.controller('LoadingCtrl',function($scope,$ionicLoading){
+  $scope.show = function() {
+    $ionicLoading.show({
+      template: 'Loading...'
+    });
+  };
+  $scope.hide = function(){
+    $ionicLoading.hide();
+  };
+})
 .controller('LoginmodalCtrl',function($scope, $ionicModal){
-
-
 })
 .controller('LoginCtrl', function($scope, $stateParams,$state,$firebaseAuth,accountdata,firebaseconfig) {
 
@@ -14,7 +22,11 @@ angular.module('starter.controllers', ['ionic'])
 })
 
 .controller('mapCtrl', function(debugMocks, $scope, parkingHistory, $ionicPopup, $firebaseAuth, $timeout, geo, $compile,accountdata,$ionicModal,firebaseconfig,firebaseparkinglist) {
-
+  $scope.ishide=false;
+  $scope.change=function(){
+    //
+    $scope.ishide=!$scope.ishide;
+  }
   $scope.isLogin=function(){
     if(accountdata.acdata[0].islogin==true){
       $scope.modal.hide();
@@ -82,11 +94,18 @@ angular.module('starter.controllers', ['ionic'])
     $scope.modal = modal;
     $scope.modal.show();
   });
-
+  
   var icon = {
-      "noCar": "https://mt.google.com/vt/icon/name=icons/spotlight/measle_8px.png&scale=1",
-      "hasCar": "https://mt.google.com/vt/icon/name=icons/spotlight/measle_green_8px.png&scale=1"
-  }
+      "noCar": {
+        'url':"https://mt.google.com/vt/icon/name=icons/spotlight/measle_8px.png&scale=1",
+        'scaledSize': new google.maps.Size(15,15)
+      },
+      "hasCar":{
+        'url':"https://mt.google.com/vt/icon/name=icons/spotlight/measle_green_8px.png&scale=1",
+        'scaledSize': new google.maps.Size(15,15)
+      }
+  } 
+  
   $scope.options = {
       isShowSearchBox: false,
   }
@@ -101,7 +120,9 @@ angular.module('starter.controllers', ['ionic'])
       carLocations: parkingHistory.list,
       flagLnr: {},
       tempLatLng: {},
-      markers:{}
+      markers:{},
+      markerdata:[],
+      markerCluster:{}
   }
   $scope.parkingHistoryList = info.carLocations;
   $scope.$on('$ionicView.enter',function(e){
@@ -141,6 +162,7 @@ angular.module('starter.controllers', ['ionic'])
       angular.element(document).ready(function() {
           //這裡firebaseconfig
           //firebase.initializeApp(firebaseconfig.config);
+          info.markerdata.push(null);
           var map = initMap(info.origin);
           addControlUI(map, 'location');
           addControlUI(map, 'options');
@@ -176,12 +198,27 @@ angular.module('starter.controllers', ['ionic'])
   function firebaseOnChanged(ref,func){
     let devicesRef = firebase.database().ref(ref);
     devicesRef.on('child_changed',function(snapshot) {
-        console.log(snapshot.val());
-        console.log(snapshot.key);
+        //console.log(snapshot.val());
+        //console.log(snapshot.key);
         info.markers[snapshot.key].setIcon(
           ((snapshot.val().access == true) ? icon.hasCar : icon.noCar)
           );
-        
+        info.markerdata[snapshot.key].access=!info.markerdata[snapshot.key].access;
+        if(info.markerdata[snapshot.key].access==false){
+          parkingHistory.isparking=true;//正在停車
+          parkingHistory.addCarParkingList(
+            {lat:info.markerdata[snapshot.key].lat,lng:info.markerdata[snapshot.key].lng},
+              info.markerdata[snapshot.key].subtitle,
+              info.markerdata[snapshot.key].price);
+          console.log(parkingHistory.list);
+        }else{
+          parkingHistory.completeCarParkingList();
+          parkingHistory.list[parkingHistory.list.length-1].status='已繳費';
+          parkingHistory.list[parkingHistory.list.length-1].paymentType=accountdata.acdata[0].paymentType;
+          console.log(accountdata.acdata[0]);
+          parkingHistory.isparking=false;//結束停車
+        }
+
     });
   }
 
@@ -193,6 +230,7 @@ angular.module('starter.controllers', ['ionic'])
             
             addMarkers(map, data.a);
             addMarkers(map, data.b);
+            console.log(info.markerdata);
             //console.log(parkingListArray);
             //存進service
             //firebaseparkinglist.setList(parkingListArray);
@@ -378,7 +416,22 @@ angular.module('starter.controllers', ['ionic'])
 
       return loc;
   }
-
+  function hidehasCarMarkers(){
+    for(var key in info.markers){
+      if(info.markerdata[key].access==false){
+        info.markers[key].setMap(null);
+      }
+    }
+    //console.log(info.markers);
+  }
+  function showhasCarMarkers(map){
+    for(var key in info.markers){
+      if(info.markerdata[key].access==false){
+        info.markers[key].setMap(map);
+      }
+    }
+    //console.log(info.markers);
+  }
   function addMarkers(map, parkingList) {
 
       var infowindow = new google.maps.InfoWindow({
@@ -408,6 +461,7 @@ angular.module('starter.controllers', ['ionic'])
           });
           info.markers[key]=m;
           markerArray.push(m);
+          info.markerdata.push(parkingList[key]);
 
 
           //infowindow.setPosition(parkingList[i]);
@@ -456,10 +510,16 @@ angular.module('starter.controllers', ['ionic'])
 
       }
 
-      var markerCluster = new MarkerClusterer(map, markerArray, {
+
+      /*var markerCluster= new MarkerClusterer(map, info.markers, {
           maxZoom: 18,
           imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'
-      });
+      });*/
+      //console.log(markerCluster);
+      //markerCluster.setMap(null);
+      //console.log(markerCluster);
+
+
       return markerArray;
   }
   $scope.calculateAndDisplayRoute =
@@ -605,17 +665,28 @@ angular.module('starter.controllers', ['ionic'])
                   scope: $scope,
                   buttons: [{
                       text: 'Cancel',
-                      type: 'button-block'
+                      type: 'button-block button-positive'
                   }, {
                       text: '<b>Save</b>',
                       type: 'button-block button-positive',
                       onTap: function(e) {
+                        /*
                           if (!$scope.data.wifi) {
                               //don't allow the user to close unless he enters wifi password
                               e.preventDefault();
                           } else {
                               return $scope.data.wifi;
+                          }*/
+                          
+                          if($scope.ishide==true){
+                            hidehasCarMarkers();
+                          }else{
+                            showhasCarMarkers(map);
                           }
+                          
+                           
+                          
+
                       }
                   }]
               };
@@ -651,11 +722,11 @@ angular.module('starter.controllers', ['ionic'])
                           info.pastcarLocationObj = addMyLocation(map,'car');
                       
                       } else {}
-                      info.pastcarLocationObj.setPosition(parkingHistory.getParkingHistories(info.carLocations.length).latLng);
-                      console.log(parkingHistory.getParkingHistories(info.carLocations.length));
-                      map.setCenter(parkingHistory.getParkingHistories(info.carLocations.length).latLng);
+                      info.pastcarLocationObj.setPosition(parkingHistory.getParkingHistories(info.carLocations.length-1).latLng);
+                      //console.log(info.carLocations.length-1);
+                      map.setCenter(parkingHistory.getParkingHistories(info.carLocations.length-1).latLng);
                       map.setZoom(19);
-                  
+                      //console.log($scope.ishide);
 
                   //console.log(clicked);
                   break;
@@ -723,6 +794,13 @@ angular.module('starter.controllers', ['ionic'])
 .controller('detailCtrl', function($scope, $stateParams, parkingHistory, $ionicPopup, $state) {
   var hid = $stateParams.hid;
   $scope.details = parkingHistory.getParkingHistories(hid);
+
+  //隱藏不需要地東西(在停車尚未離開時)
+
+    
+ 
+
+
   hidePaymentButton($scope.details);
   //console.log($scope.details);
   $scope.billpopup = function() {
@@ -785,7 +863,18 @@ angular.module('starter.controllers', ['ionic'])
   }
   $scope.$on('$ionicView.enter',function(e){
       //每次載入都要執行一次
-  $scope.parkingHistories = parkingHistory.list;
+      $scope.parkingHistories = parkingHistory.list;
+
+      if(parkingHistory.isparking==true){
+        $scope.parkingHistories[parkingHistory.list.length-1].alongTime=0;
+      }else{
+        if(typeof($scope.parkingHistories[parkingHistory.list.length-1].start)!='string'){
+          $scope.parkingHistories[parkingHistory.list.length-1].price=$scope.parkingHistories[parkingHistory.list.length-1].billing*$scope.parkingHistories[parkingHistory.list.length-1].alongTime;
+          //console.log($scope.parkingHistories[parkingHistory.list.length-1].price);
+        }
+          else{}
+        //console.log($scope.parkingHistories[parkingHistory.list.length-1].alongTime);
+      }
   parkingHistory.clearNonepayHistories();
   console.log($scope.togglecheck);
   parkingHistory.setNonepayHistories();
@@ -835,7 +924,29 @@ angular.module('starter.controllers', ['ionic'])
 })
 
 .controller('conditionCtrl', function($scope, parkingHistory) {
-    $scope.condition = parkingHistory.getParkingHistories(parkingHistory.list.length);
+    $scope.$on('$ionicView.enter',function(e){
+       $scope.nowalong=0;
+       $scope.condition = parkingHistory.getParkingHistories(parkingHistory.list.length-1);
+      if(parkingHistory.isparking==true){
+        document.getElementById('condi').hidden=false;
+        var now= new Date().getTime();
+        var nowalong=(now-$scope.condition.start)/60000;
+        $scope.nowalongmin=Math.round(nowalong%60);
+        $scope.nowalonghour=Math.round(nowalong/60);
+        $scope.condition.alongTime=Math.round(nowalong);
+      }else{
+        document.getElementById('condi').hidden=true;
+        if(typeof($scope.condition.start)!='string'){
+          var now= new Date().getTime();
+          var nowalong=(now-$scope.condition.start)/60000;
+          $scope.condition.alongTime=Math.round(nowalong);
+          console.log(parkingHistory.list[parkingHistory.list.length-1].alongTime);
+        }else{console.log("not");}
+      }
+      
+    });
+    
+
 })
 
 .controller('PaymentCtrl', function($scope, accountdata, $ionicPopup, $state) {

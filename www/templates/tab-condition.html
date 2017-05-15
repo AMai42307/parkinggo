@@ -15,7 +15,7 @@
 
     <ion-content>
 
-        <div class="list">
+        <div class="list" id="condi">
             <a class="item">
                 車子位置：
                 <span class="item-note">
@@ -26,26 +26,26 @@
             <a class="item">
                 停放時間：
                 <span class="item-note">
-                {{condition.start}}
+                {{condition.start | date:'yyyy-MM-dd HH:mm'}}
                 </span>
             </a>
 
             <a class="item">
-                停留時間：
+                目前停留時間：
                 <span class="item-note">
-                {{condition.alongTime}}
+                已停留{{nowalonghour}}小時{{nowalongmin}}分
                 </span>
             </a>
             <a class="item">
                 車位單價：
                 <span class="item-note">
-                {{condition.billing}}
+                ${{condition.billing}}
                 </span>
             </a>
             <a class="item">
                 目前應付金額：
                 <span class="item-note">
-                {{condition.price}}
+                ${{condition.price}}
                 </span>
             </a>
             <a class="item">

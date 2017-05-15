@@ -172,6 +172,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
                     controller: 'LoginmodalCtrl'
                 }
             }
+        })
+        .state('app.mapset', {
+            url: '/mapset',
+            views: {
+                'menuContent': {
+                    templateUrl: 'templates/map-settings.html',
+                    controller: 'mapCtrl'
+                }
+            }
         });
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/map');

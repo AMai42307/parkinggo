@@ -75,7 +75,7 @@
                 <p><span class="time">{{h.start | date:'yyyy-MM-dd HH:mm'}}</span> </p>
                 <div class="detail">
                     <span class="status">{{h.status}}</span>
-                    <span class="badge badge-assertive price">{{h.price}}</span>
+                    <span class="badge badge-assertive price">${{h.price}}</span>
                     <button class="button button-positive btn-more" ng-click="goDetail({{h.hid}})">
                         <i class="icon ion-more"></i>
                     </button>
